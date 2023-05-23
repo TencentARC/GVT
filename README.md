@@ -1,4 +1,5 @@
 # GVT: Good Visual Tokenizer for LLMs
+This repo contains assets in our paper [What makes for Good Visual Tokenizers for Large Language Models?](https://arxiv.org/abs/2305.12223)
 
 ## Model
 Comming Soon
