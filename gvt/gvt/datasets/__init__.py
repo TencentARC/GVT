@@ -1,0 +1,5 @@
+from .vqav2_dataset import VQAv2Dataset
+from .coco_caption_karpathy_dataset import CocoCaptionKarpathyDataset
+
+from .coco_eval_datasets import COCOMultiClassDataset, COCOCountDataset
+from .vcr_eval_datasets import VCRMultiClassDataset, VCRCountDataset
