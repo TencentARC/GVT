@@ -34,8 +34,7 @@ class BaseDataset(torch.utils.data.Dataset):
 
         self.text_in = "What does the image describe?"
 
-        if len(names) != 0:
-            
+        if len(names) != 0: 
             tables = [
                 pa.ipc.RecordBatchFileReader(
                     pa.memory_map(f"{data_dir}/{name}.arrow", "r")
@@ -52,7 +51,7 @@ class BaseDataset(torch.utils.data.Dataset):
             if text_column_name != "":
                 self.text_column_name = text_column_name
                 self.all_texts = self.table[text_column_name].to_pandas().tolist()
-                self.all_texts = ( # [[sent1, sent2..]]
+                self.all_texts = (
                     [list(set(texts)) for texts in self.all_texts]
                     if remove_duplicate
                     else self.all_texts
@@ -85,7 +84,7 @@ class BaseDataset(torch.utils.data.Dataset):
 
 
     def get_raw_image(self, index, image_key="image"):
-        index, caption_index = self.index_mapper[index]
+        index, _ = self.index_mapper[index]
         image_bytes = io.BytesIO(self.table[image_key][index].as_py())
         image_bytes.seek(0)
         return Image.open(image_bytes).convert("RGB")
@@ -96,7 +95,6 @@ class BaseDataset(torch.utils.data.Dataset):
         image_tensor = [image]
         for tr in self.transforms:
             image_tensor[0] = tr(image_tensor[0])
-            
         return {
             "image": image_tensor,
             "img_index": self.index_mapper[index][0],
@@ -115,12 +113,11 @@ class BaseDataset(torch.utils.data.Dataset):
     def get_text(self, raw_index):
         index, caption_index = self.index_mapper[raw_index]
 
-        text = self.all_texts[index][caption_index] # should be a string
+        text = self.all_texts[index][caption_index]
 
         # by default, using image-text pair
         text_in = "what does the image describe?"
         text_out = text
-        
         return {
             "text_in":  text_in,
             "text_out": text_out,
@@ -152,15 +149,11 @@ class BaseDataset(torch.utils.data.Dataset):
     def get_text_suite(self, index):
         result = None
         while result is None:
-            try:
-                ret = dict()
-                txt = self.get_text(index)
-                ret.update({"replica": True if txt["cap_index"] > 0 else False})
-                ret.update(txt)
-                result = True
-            except Exception as e:
-                print(f"Error while read file idx {index} in {self.names[0]} -> {e}")
-                index = random.randint(0, len(self.index_mapper) - 1)
+            ret = dict()
+            txt = self.get_text(index)
+            ret.update({"replica": True if txt["cap_index"] > 0 else False})
+            ret.update(txt)
+            result = True
         return ret
 
 
@@ -181,7 +174,7 @@ class BaseDataset(torch.utils.data.Dataset):
         if len(txt_keys) != 0:
             texts = [[d for d in dict_batch[txt_key]] for txt_key in txt_keys]
 
-            for i, txt_key in enumerate(txt_keys):
+            for _, txt_key in enumerate(txt_keys):
                 texts = [d for d in dict_batch[txt_key]]
                 dict_batch[txt_key] = texts
 

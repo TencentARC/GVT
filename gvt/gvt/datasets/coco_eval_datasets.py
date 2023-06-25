@@ -1,5 +1,6 @@
 from .base_dataset import BaseDataset
 
+
 class COCOCountDataset(BaseDataset):
     def __init__(self, *args, split="", **kwargs):
 
@@ -13,7 +14,6 @@ class COCOCountDataset(BaseDataset):
             text_column_name="caption",
             remove_duplicate=False,
         )
-
 
     def __getitem__(self, index):
         image_tensor = self.get_image(index)["image"]

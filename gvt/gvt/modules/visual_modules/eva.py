@@ -28,6 +28,7 @@ from torch import nn
 from einops import rearrange, repeat
 import logging
 
+
 def broadcat(tensors, dim = -1):
     num_tensors = len(tensors)
     shape_lens = set(list(map(lambda t: len(t.shape), tensors)))
@@ -36,13 +37,14 @@ def broadcat(tensors, dim = -1):
     dim = (dim + shape_len) if dim < 0 else dim
     dims = list(zip(*map(lambda t: list(t.shape), tensors)))
     expandable_dims = [(i, val) for i, val in enumerate(dims) if i != dim]
-    assert all([*map(lambda t: len(set(t[1])) <= 2, expandable_dims)]), 'invalid dimensions for broadcastable concatentation'
+    assert all([*map(lambda t: len(set(t[1])) <= 2, expandable_dims)]), 'invalid dimensions for broadcastable'
     max_dims = list(map(lambda t: (t[0], max(t[1])), expandable_dims))
     expanded_dims = list(map(lambda t: (t[0], (t[1],) * num_tensors), max_dims))
     expanded_dims.insert(dim, (dim, dims[dim]))
     expandable_shapes = list(zip(*map(lambda t: t[1], expanded_dims)))
     tensors = list(map(lambda t: t[0].expand(*t[1]), zip(tensors, expandable_shapes)))
     return torch.cat(tensors, dim = dim)
+
 
 def rotate_half(x):
     x = rearrange(x, '... (d r) -> ... d r', r = 2)
@@ -75,7 +77,8 @@ class VisionRotaryEmbedding(nn.Module):
         else:
             raise ValueError(f'unknown modality {freqs_for}')
 
-        if ft_seq_len is None: ft_seq_len = pt_seq_len
+        if ft_seq_len is None: 
+            ft_seq_len = pt_seq_len
         t = torch.arange(ft_seq_len) / ft_seq_len * pt_seq_len
 
         freqs_h = torch.einsum('..., f -> ... f', t, freqs)
@@ -254,6 +257,7 @@ class Mlp(nn.Module):
         x = self.drop(x)
         return x
 
+
 class SwiGLU(nn.Module):
     def __init__(self, in_features, hidden_features=None, out_features=None, act_layer=nn.SiLU, drop=0., 
                 norm_layer=nn.LayerNorm, subln=False):
@@ -278,6 +282,7 @@ class SwiGLU(nn.Module):
         x = self.w3(x)
         x = self.drop(x)
         return x
+
 
 class Attention(nn.Module):
     def __init__(

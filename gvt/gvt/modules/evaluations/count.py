@@ -58,7 +58,7 @@ def extract_digit(string):
         string = string.replace(k, str(v))
 
     digit = re.findall("\d+", string)
-    if len(digit):
+    if digit and len(digit):
         digit = int(digit[0])
     else:
         digit = 0
@@ -101,11 +101,13 @@ def stat(result):
     mse_sum = 0
     correct = 0
     for pred, gt in result:
-        pred = int(pred); gt = int(gt)
+        pred = int(pred)
+        gt = int(gt)
         
         mae_sum += np.abs(int(gt) - int(pred))
         mse_sum += np.power(int(gt) - int(pred), 2)
-        if pred == gt: correct += 1
+        if pred == gt: 
+            correct += 1
 
     return{
         "acc":  "{:.4f}".format(1.0 * correct / count),
@@ -116,8 +118,8 @@ def stat(result):
 
 def eval(outputs, model_name, split="val"):
     pred_results = []
-    for output in outputs:
-        for pred, gt, image_id, n_obj_exist in zip(output['pred'], output['gt'], output['image_id'], output['n_obj_exist']):
+    for out in outputs:
+        for pred, gt, image_id, n_obj_exist in zip(out['pred'], out['gt'], out['image_id'], out['n_obj_exist']):
             pred_results.append({
                 "pred": pred,
                 "gt": gt,
@@ -137,9 +139,7 @@ def eval(outputs, model_name, split="val"):
         print(k, "{:.4f}".format(v))
 
     keys = sorted(list(result_bin.keys()))
-    new_result_bin = OrderedDict({k:result_bin[k] for k in keys})
+    new_result_bin = OrderedDict({k: result_bin[k] for k in keys})
 
     for k, v in new_result_bin.items():
         print(f"{k*3}~{(k+1)*3}:", stat(v))
-
-    

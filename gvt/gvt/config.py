@@ -2,6 +2,7 @@ from sacred import Experiment
 
 ex = Experiment("GVT")
 
+
 @ex.config
 def config():
     exp_name = "GVT"

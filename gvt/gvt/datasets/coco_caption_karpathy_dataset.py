@@ -1,5 +1,6 @@
 from .base_dataset import BaseDataset
 
+
 class CocoCaptionKarpathyDataset(BaseDataset):
     def __init__(self, *args, split="", **kwargs):
         assert split in ["train", "val", "test"]

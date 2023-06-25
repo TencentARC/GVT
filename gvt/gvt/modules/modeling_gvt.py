@@ -27,7 +27,7 @@ def postprocess(output_text):
         text = text.replace("\n", "")
         ls = text.strip().split(' ')
         ls = [w for w in ls if w]
-        if len(ls):
+        if ls and len(ls):
             if ls[0] == '.':
                 ls = ls[1:]
             if "." in ls:
@@ -53,7 +53,7 @@ class GVT(pl.LightningModule):
         self.num_latents = config['num_latents']
         
         self.config = config
-        self.hparams.config = config # for pytorch lightning
+        self.hparams.config = config 
 
         
         self.visual_encoder = self.init_vision_encoder()
@@ -137,9 +137,9 @@ class GVT(pl.LightningModule):
         model.load_state_dict(state_dict, strict=False)
         updated_keys = []
         for k, v in model.named_parameters():
-            if k in state_dict: updated_keys.append(k)
+            if k in state_dict: 
+                updated_keys.append(k)
                 
-        print("load state dict done!", "ours:", len(list(model.named_parameters())), "state dict:", len(list(state_dict.items())))
 
 
     def init_vision_encoder(self):

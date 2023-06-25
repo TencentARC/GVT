@@ -106,6 +106,7 @@ def save_result(result, result_dir, filename, remove_duplicate=""):
 
     return final_result_file
 
+
 def coco_caption_eval(coco_gt_root, results_file, split):
 
     filenames = {
