@@ -5,7 +5,7 @@ from collections import OrderedDict
 import pytorch_lightning as pl
 
 from gvt.config import ex
-from gvt.modules import GVT
+from gvt.modules import GVT, MLLM_BLIP2, MLLM_LLAVA, MLLM_MINIGPT4
 from gvt.datamodules.multitask_datamodule import MTDataModule
 
 from pytorch_lightning.plugins import environments as pl_env
@@ -72,10 +72,19 @@ def main(_config):
 
     dm = MTDataModule(_config, dist=True)
 
-   
-    model = GVT(config=_config)
+    baseline = _config['use_baseline']
+    if baseline:
+        if baseline == "llava":
+            model = MLLM_LLAVA(config=_config)
+        if baseline == "minigpt4":
+            resume_ckpt = "params/pretrained_minigpt4_7b.pth"
+            model = MLLM_MINIGPT4(config=_config)
+        if baseline == "blip2":
+            model = MLLM_BLIP2(config=_config)
+    else:
+        model = GVT(config=_config)
+    
     exp_name = f'{_config["exp_name"]}'
-
     os.makedirs(_config["log_dir"], exist_ok=True)
     checkpoint_callback = pl.callbacks.ModelCheckpoint(
         save_top_k=-1,

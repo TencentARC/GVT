@@ -49,6 +49,10 @@ def config():
     load_path = ""
     log_dir = ""
 
+    llava7b_path = ""
+    flant5xxl_path = ""
+ 
+    use_baseline = "" # chane to blip2/llava/minigpt4
 
 
 @ex.named_config
