@@ -71,3 +71,11 @@ You may evaluate corrsponding task with different task names
 bash scripts/eval.sh
 ```
 
+## Results
+We provide results on OC and MCI as follows:
+|Model|COCO-OC|COCO-MCI|VCR-OC|VCR-MCI|
+|---|---|---|---|---|
+|MiniGPT-4|21.5|76.8|25.1|70.1| 
+|LLaVa|22.2|52.0|24.6|66.9|
+|BLIP-2|48.0|81.9|20.2|68.9|
+|GVT(Ours)|56.2|89.3|40.3|78.9|
